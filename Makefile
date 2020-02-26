@@ -6,7 +6,7 @@
 #    By: jivan-de <jivan-de@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 11:23:43 by jivan-de       #+#    #+#                 #
-#    Updated: 2020/01/07 15:20:10 by jivan-de      ########   odam.nl          #
+#    Updated: 2020/01/07 12:37:07 by jivan-de      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,17 +22,24 @@ COM_STRING   = "Compiling"
 
 NAME = libftprintf.a
 FLAGS = -Wall -Werror -Wextra -Ilibft
-SOURCES =	main.c 
+SOURCES =	ft_printf.c \
+			src/parser.c \
+			src/config.c \
+			src/printer.c \
+			src/print_pcnt.c \
+			src/print_num.c \
+			src/print_hex.c \
+			src/print_char.c \
+			src/print_uint.c \
+			src/print_pointer.c \
+			src/print_string.c
 
 OBJECTS = $(SOURCES:.c=.o)
 LIBFT = libft.a
 
-LIBS	= -Lmlx -lmlx -framework OpenGL -framework AppKit -lm
-MLX		= libmlx.dylib
-
 all: $(NAME)
 
-$(NAME): $(MLX) $(LIBFT) $(OBJECTS)
+$(NAME): $(LIBFT) $(OBJECTS)
 	@printf "%b" "$(COM_COLOR)Building library: $(NO_COLOR)"
 	@ar rc $(NAME) $(OBJECTS)
 	@ranlib $(NAME)
@@ -44,10 +51,6 @@ $(LIBFT):
 	@printf "%b" "$(COM_COLOR)Movind LibFT to root...\n$(NO_COLOR)"
 	@cp libft/libft.a .
 	@mv libft.a $(NAME)
-
-$(MLX): @$(MAKE) -C mlx
-		@cp mlx/mlx.dylib
-		@mv mlx.dylib $(NAME)
 
 %.o: %.c
 	@$(CC) -c $(FLAGS) $< -o $@; \
@@ -62,14 +65,14 @@ $(MLX): @$(MAKE) -C mlx
         exit $$RESULT
 
 clean:
-	@$(MAKE) -C mlx libft fclean
+	@$(MAKE) -C libft fclean
 	@printf "%b" "$(COM_COLOR)Cleaning up object files: $(NO_COLOR)"
 	@$(RM) $(OBJECTS) a.out
 	@printf "%b" "$(OK_COLOR)$(OK_STRING)\n$(NO_COLOR)"
 
 fclean: clean
 	@printf "%b" "$(COM_COLOR)Cleaning up $(NAME): $(NO_COLOR)"
-	@$(RM) $(NAME) $(MLX)
+	@$(RM) $(NAME)
 	@printf "%b" "$(OK_COLOR)$(OK_STRING)\n$(NO_COLOR)"
 
 re: fclean all
